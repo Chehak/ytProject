@@ -1,18 +1,30 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { YOUTUBE_MOST_POPULAR_API } from "../utils/constants";
+import VideoCard, { AdVideoCard } from "./VideoCard";
+import { Link } from "react-router-dom";
 
 const VideoContainer = () => {
+  const [videos,setVideos] = useState([])
+
   useEffect(() => {
     getVideos();
   }, []);
 
   const getVideos = async () => {
     const data = await fetch(YOUTUBE_MOST_POPULAR_API);
-    const json = data.json();
-    console.log(json);
+    const json = await data.json();
+    setVideos(json.items)
   };
 
-  return <div>VideoContainer</div>;
-};
 
+  return (
+    <div className="flex flex-wrap gap-[12px] p-2 m-2">    
+    {videos[0] && <AdVideoCard info={videos[0]} />}
+     {videos.map((video) => (
+        <Link to={'/watch'+'?v='+video?.id}>  <VideoCard info={video} key={video?.id}/> </Link>
+      ))}
+  
+    </div>
+  );
+};
 export default VideoContainer;

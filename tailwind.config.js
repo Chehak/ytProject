@@ -5,5 +5,12 @@ module.exports = {
   theme: {
     extend: {},
   },
-  plugins: [],
+  plugins: [
+    require('@tailwindcss/line-clamp'),
+  ],
+  safelist: [
+    {
+      pattern: /./, // This line ensures Tailwind processes all classes, including arbitrary ones
+    },
+  ],
 };
