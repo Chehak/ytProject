@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { HAMBURGER_MENU, USER_ICON, YOUTUBE_SEARCH_SUGGESTION_API, YT_LOGO } from "../utils/constants";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { toggleMenu } from "../utils/appSlice";
 import { createCache } from "../utils/searchSlice";
 
@@ -9,14 +9,21 @@ const Header = () => {
   const [searchResults,setSearchResults] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false)
   const dispatch = useDispatch();
-  
+  const cachedResults = useSelector((store)=>store.search)
+  console.log(cachedResults,"cachedResults");
   const handleToggleClick = () => {
     dispatch(toggleMenu());
   };
   
   useEffect(() => {
-    const timer = setTimeout(() => {     
-      fetchSearchResults();   
+    const timer = setTimeout(() => { 
+      if(cachedResults[searchQuery]){
+        setSearchResults(cachedResults[searchQuery])
+      }
+      else{
+
+        fetchSearchResults();   
+      }
     }, 200);
 
     return () => {
