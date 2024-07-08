@@ -87,7 +87,7 @@ const CommentsPage = () => {
 
   const Comments = ({ data }) => {
     console.log(data, "comments");
-    const { name, text, replies } = data;
+    const { name, text } = data;
     return (
       <div className="flex shadow-sm bg-gray-100 p-2 rounded-lg my-2">
         <img src={USER_ICON} className="h-8" />
