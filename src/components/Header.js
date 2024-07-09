@@ -9,8 +9,7 @@ const Header = () => {
   const [searchResults,setSearchResults] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false)
   const dispatch = useDispatch();
-  const cachedResults = useSelector((store)=>store.search)
-  console.log(cachedResults,"cachedResults");
+  const cachedResults = useSelector((store)=>store.search)  
   const handleToggleClick = () => {
     dispatch(toggleMenu());
   };
