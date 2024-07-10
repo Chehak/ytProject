@@ -1,27 +1,31 @@
 import React, { useEffect, useState } from "react";
-import { HAMBURGER_MENU, USER_ICON, YOUTUBE_SEARCH_SUGGESTION_API, YT_LOGO } from "../utils/constants";
+import {
+  HAMBURGER_MENU,
+  USER_ICON,
+  YOUTUBE_SEARCH_SUGGESTION_API,
+  YT_SEARCH_RESULTS,
+} from "../utils/constants";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleMenu } from "../utils/appSlice";
 import { createCache } from "../utils/searchSlice";
+import { addLiveMessage } from "../utils/liveMessageSlice";
 
 const Header = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [searchResults,setSearchResults] = useState([]);
-  const [showSuggestions, setShowSuggestions] = useState(false)
+  const [searchResults, setSearchResults] = useState([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
   const dispatch = useDispatch();
-  const cachedResults = useSelector((store)=>store.search)  
+  const cachedResults = useSelector((store) => store.search);
   const handleToggleClick = () => {
     dispatch(toggleMenu());
   };
-  
-  useEffect(() => {
-    const timer = setTimeout(() => { 
-      if(cachedResults[searchQuery]){
-        setSearchResults(cachedResults[searchQuery])
-      }
-      else{
 
-        fetchSearchResults();   
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (cachedResults[searchQuery]) {
+        setSearchResults(cachedResults[searchQuery]);
+      } else {
+        fetchSearchResults();
       }
     }, 200);
 
@@ -30,13 +34,21 @@ const Header = () => {
     };
   }, [searchQuery]);
 
-
-  const fetchSearchResults = async ()=>{
-    const apiResults = await fetch(YOUTUBE_SEARCH_SUGGESTION_API+searchQuery);
+  const fetchSearchResults = async () => {
+    const apiResults = await fetch(YOUTUBE_SEARCH_SUGGESTION_API + searchQuery);
     const data = await apiResults.json();
     setSearchResults(data[1]);
-    dispatch(createCache({[searchQuery]:data[1]}))
-  }
+    dispatch(createCache({ [searchQuery]: data[1] }));
+  };
+
+  const handleSearchSelect = async(s) => {
+    setSearchQuery(s);
+    dispatch(addLiveMessage(s));
+    // console.log(s);
+    // const result = await fetch(YT_SEARCH_RESULTS+s);
+    // const data = await result.json();
+    // setSearchResults(data.items)
+  };
 
   return (
     <div className="grid grid-flow-col p-4 m-2 shadow-lg">
@@ -90,25 +102,31 @@ const Header = () => {
           className="w-1/2 border border-[#ccc] rounded-l-full py-1 px-5 ml-5"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          onFocus={()=>setShowSuggestions(true)}
-          onBlur={()=>setShowSuggestions(false)}
+          onFocus={() => setShowSuggestions(true)}
+          onBlur={() => setShowSuggestions(false)}
         />
-       
+
         <button
           type="submit"
           className="rounded-r-full border border-[#ccc] py-1 px-3 bg-[#f0f0f0]"
         >
           🔍
         </button>
-       {
-        showSuggestions &&  <div className="absolute bg-white py-2 px-5 w-[32.5rem] ml-5 rounded-lg border-gray-200 ">
-        <ul >
-         {searchResults.map((searches)=>(
-          <li className="shadow-sm hover:bg-gray-100">{searches}</li>
-         ))}
-        </ul>
-      </div> 
-       }   
+        {searchResults && (
+          <div className="absolute bg-white py-2 px-5 w-[32.5rem] ml-5 rounded-lg border-gray-200 ">
+            <ul>
+              {searchResults.map((searches) => (
+                <li
+                  className="shadow-sm hover:bg-gray-100"
+                  key={searches}
+                  onClick={()=>handleSearchSelect(searches)}
+                >
+                  {searches}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
       <div className="col-span-1">
         <img alt="user-icon" src={USER_ICON} className="h-8" />

@@ -3,11 +3,17 @@ import ChatMessage from "./ChatMessage";
 import { generateRandomMessage, generateRandomName } from "../utils/helper";
 import { addMessage } from "../utils/chatSlice";
 import { useDispatch, useSelector } from "react-redux";
+import EmojiPicker from "emoji-picker-react";
 
 const LiveChat = () => {
   const dispatch = useDispatch();
   const getAllMessages = useSelector((store) => store.chat.messages);
-  const [liveMessage, setLiveMesssage] = useState('')
+  const [liveMessage, setLiveMesssage] = useState("");
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+
+  const onEmojiClick = (emojiObject) => {
+    setLiveMesssage(previous => previous + emojiObject.emoji);
+  };
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -25,7 +31,7 @@ const LiveChat = () => {
 
   return (
     <>
-      <div className="border border-black ml-2 p-1 h-[400px] overflow-y-scroll flex flex-col-reverse">
+      <div className=" w-full border border-black ml-2 p-1 h-[400px] overflow-y-scroll flex flex-col-reverse">
         <div>
           {getAllMessages &&
             getAllMessages.map((message) => (
@@ -34,15 +40,37 @@ const LiveChat = () => {
         </div>
       </div>
 
-      <form className="w-full p-1 ml-2 border border-black"
+      <form
+        className="ml-2 border border-black w-full"
         onSubmit={(e) => {
           e.preventDefault();
-          dispatch(addMessage({name:generateRandomName() , message : liveMessage}));
-          setLiveMesssage('')
+          dispatch(
+            addMessage({ name: generateRandomName(), message: liveMessage })
+          );
+          setLiveMesssage("");
         }}
       >
-        <input type="text" className="border border-violet-100 p-1 w-[28rem] m-1 " value={liveMessage} onChange={(e)=>setLiveMesssage(e.target.value)} />
-        <button className="p-1 m-1 bg-green-100">Send</button>
+       <div className="flex items-center  relative">
+      <span 
+        onClick={() => setShowEmojiPicker(!showEmojiPicker)} 
+        className="absolute left-0 p-2 border border-r-black rounded-lg shadow-lg"
+      >
+        😀
+      </span>
+      {showEmojiPicker && (
+        <div className="absolute left-0 top-12 z-10 w-full">
+          <EmojiPicker onEmojiClick={(e)=>onEmojiClick(e)} className="w-full"/>
+        </div>
+      )}
+      <input 
+        type="text" 
+        value={liveMessage}
+            onChange={(e) => setLiveMesssage(e.target.value)}
+        placeholder="Type something..."
+        className="flex-1 p-2 pl-10 border border-gray-300 rounded"
+      />
+      {liveMessage && <button className="ml-2 p-2 bg-blue-500 text-white rounded">Send</button>}
+    </div>
       </form>
     </>
   );
