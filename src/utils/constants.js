@@ -6,3 +6,4 @@ export const YOUTUBE_MOST_POPULAR_API =
   "https://youtube.googleapis.com/youtube/v3/videos?part=snippet%2CcontentDetails%2Cstatistics&chart=mostPopular&maxResults=50&regionCode=IN&key=AIzaSyBV73uEvEsMCU0zP7_rrDs99nz5gBywXW8";
 export const YOUTUBE_SEARCH_SUGGESTION_API="http://suggestqueries.google.com/complete/search?client=firefox&ds=yt&q=";
 export const COUNT_CHAT = 25
+export const YT_SEARCH_RESULTS = "https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=20&type=video&key=AIzaSyBV73uEvEsMCU0zP7_rrDs99nz5gBywXW8&q="

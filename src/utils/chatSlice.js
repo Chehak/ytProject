@@ -9,7 +9,7 @@ const chatSlice = createSlice({
     },
     reducers:{
         addMessage:(state,action)=>{
-           if (state.messages.length > 25) {
+           if (state.messages.length > COUNT_CHAT) {
             state.messages.shift()
            }
             state.messages.push(action.payload)
