@@ -6,7 +6,7 @@ const Sidebar = () => {
   //this is known as early return pattern
   if (!isMenuOpen) return;
   return (
-    <div className="p-5 shadow-lg w-48">
+    <div className="p-5 shadow-lg w-48 h-auto">
       <h2 className="font-bold">You</h2>
       <ul>
         <li>Home</li>
